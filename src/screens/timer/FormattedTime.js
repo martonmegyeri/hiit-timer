@@ -8,7 +8,8 @@ class FormattedTime extends Component {
   animatedOpacity = new Animated.Value(1);
 
   componentDidUpdate() {
-    if (this.props.paused) {
+    if (this.props.paused && !this.wait) {
+      this.wait = true;
       this.animation = Animated.loop(
         Animated.sequence([
           Animated.timing(this.animatedOpacity, {
@@ -23,7 +24,7 @@ class FormattedTime extends Component {
           Animated.delay(500)
         ])
       );
-      this.animation.start();
+      this.animation.start(() => { this.wait = false; });
     } else if (this.animation) {
       this.animation.stop();
       this.animatedOpacity.setValue(1);

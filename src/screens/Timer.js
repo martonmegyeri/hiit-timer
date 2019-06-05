@@ -151,11 +151,10 @@ class Timer extends Component {
   }
 
   pauseTimer = () => {
-    const that = this;
     if (this.state.isPaused) {
       this.setState({ isPaused: false }, () => {
-        that.nextAt = 0;
-        that.tick();
+        this.nextAt = 0;
+        this.tick();
       });
     } else {
       this.setState({ isPaused: true });

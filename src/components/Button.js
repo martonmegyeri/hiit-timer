@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Image, TouchableWithoutFeedback, StyleSheet, Animated } from 'react-native';
+import { View, Image, TouchableWithoutFeedback, StyleSheet, Animated, Easing } from 'react-native';
 import PropTypes from 'prop-types';
 
 import colors from '../style/colors';
@@ -10,35 +10,41 @@ const Button = ({ onPress, disabled, icon, iconTintColor, backgroundColor, press
   const animatedScale = useRef(new Animated.Value(1)).current;
   const animatedOpacity = useRef(new Animated.Value(1)).current;
   const [iconNum, setIconNum] = useState(icon);
+  const [disabledByAnimation, setDisabledByAnimation] = useState(false);
   const prevIcon = usePrevious(icon);
 
   useEffect(() => {
     if (prevIcon && icon !== prevIcon) {
+      setDisabledByAnimation(true);
       Animated.parallel([
         Animated.timing(animatedScale, {
-          toValue: 0.75,
-          duration: 100,
+          toValue: 0,
+          duration: 200,
+          easing: Easing.ease,
           useNativeDriver: true
         }),
         Animated.timing(animatedOpacity, {
           toValue: 0,
+          delay: 100,
           duration: 100,
+          easing: Easing.ease,
           useNativeDriver: true
-        })
+        }),
+        Animated.delay(1000)
       ]).start(() => {
         setIconNum(icon);
         Animated.parallel([
           Animated.timing(animatedScale, {
             toValue: 1,
-            duration: 100,
+            duration: 200,
             useNativeDriver: true
           }),
           Animated.timing(animatedOpacity, {
             toValue: 1,
-            duration: 100,
+            duration: 200,
             useNativeDriver: true
           })
-        ]).start();
+        ]).start(() => setDisabledByAnimation(false));
       });
     }
   }, [icon]);
@@ -58,18 +64,23 @@ const Button = ({ onPress, disabled, icon, iconTintColor, backgroundColor, press
   };
 
   return (
-    <View style={styles.container}>
+    <Animated.View
+      style={[styles.container, {
+        opacity: animatedOpacity,
+        transform: [{ scale: animatedScale }]
+      }]}
+    >
       <TouchableWithoutFeedback
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         onPress={onPress}
-        disabled={disabled}
+        disabled={disabled || disabledByAnimation}
       >
         <Animated.View
           style={[styles.button, {
             backgroundColor: animatedColor.interpolate({
               inputRange: [0, 1],
-              outputRange: disabled
+              outputRange: disabled || disabledByAnimation
                 ? [pressedBackgroundColor, pressedBackgroundColor]
                 : [backgroundColor, pressedBackgroundColor]
             }),
@@ -79,11 +90,9 @@ const Button = ({ onPress, disabled, icon, iconTintColor, backgroundColor, press
             })
           }]}
         >
-          <Animated.View
+          <View
             style={[styles.buttonIconContainer, {
-              color: disabled ? colors.accentLight : colors.white,
-              opacity: animatedOpacity,
-              transform: [{ scale: animatedScale }]
+              color: disabled ? colors.accentLight : colors.white
             }]}
           >
             <Image
@@ -92,10 +101,10 @@ const Button = ({ onPress, disabled, icon, iconTintColor, backgroundColor, press
                 tintColor: iconTintColor
               }]}
             />
-          </Animated.View>
+          </View>
         </Animated.View>
       </TouchableWithoutFeedback>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -107,12 +116,10 @@ const styles = StyleSheet.create({
     marginVertical: 50
   },
   button: {
-    backgroundColor: colors.primary,
     width: 70,
     height: 70,
     borderRadius: 35,
-    justifyContent: 'center',
-    elevation: 5
+    justifyContent: 'center'
   },
   buttonIconContainer: {
     alignItems: 'center',
