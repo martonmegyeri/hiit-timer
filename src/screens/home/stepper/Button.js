@@ -33,7 +33,7 @@ const Button = ({ icon, onPress, onPressIn, onPressOut }) => {
         style={[styles.buttonContainer, {
           backgroundColor: animatedColor.interpolate({
             inputRange: [0, 1],
-            outputRange: ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.1)']
+            outputRange: ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.2)']
           })
         }]}
       >
@@ -42,6 +42,10 @@ const Button = ({ icon, onPress, onPressIn, onPressOut }) => {
             backgroundColor: animatedColor.interpolate({
               inputRange: [0, 1],
               outputRange: [colors.white, colors.primaryLight]
+            }),
+            elevation: animatedColor.interpolate({
+              inputRange: [0, 1],
+              outputRange: [5, 2]
             })
           }]}
         >
@@ -66,8 +70,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 15,
-    backgroundColor: colors.white,
-    elevation: 5
+    backgroundColor: colors.white
   },
   buttonIcon: {
     width: '60%',
