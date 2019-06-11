@@ -1,4 +1,4 @@
-package com.hiittimer;
+package com.megyerimarton.hiittimer;
 
 import android.app.Application;
 

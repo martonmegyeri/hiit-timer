@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.hiittimer">
+  package="com.megyerimarton.hiittimer">
 
     <uses-permission android:name="android.permission.INTERNET" />
 

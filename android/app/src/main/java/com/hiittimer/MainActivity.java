@@ -1,4 +1,4 @@
-package com.hiittimer;
+package com.megyerimarton.hiittimer;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
