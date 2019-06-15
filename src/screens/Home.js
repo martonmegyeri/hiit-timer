@@ -19,6 +19,7 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     loadDefaults();
 
+    NavigationBar.setColor(colors.primaryDark);
     navigation.addListener('willFocus', () => {
       NavigationBar.setColor(colors.primaryDark);
     });
